@@ -1,0 +1,80 @@
+{% load static %} {# Загружаем тег static для доступа к файлам в папке static #}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Архыз Life{% endblock title %}</title>
+
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
+
+    <!-- Твои основные стили -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Стили для Lightbox2 -->
+    <link rel="stylesheet" href="{% static 'lightbox2/css/lightbox.min.css' %}">
+
+    <!-- Здесь могут быть другие общие теги head, например, для шрифтов или favicon -->
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="{% url 'catalog:home' %}" class="logo-link">
+                {% comment %} Используй img если у тебя есть файл логотипа {% endcomment %}
+                <img src="{% static 'images/logo_arkhyz_life.png' %}" alt="АРХЫЗ life" class="logo-image">
+                {% comment %} Или текстовый логотип, если файла нет:
+                <span class="logo-text-main">АРХЫЗ</span><span class="logo-text-life">life</span>
+                {% endcomment %}
+            </a>
+            <button class="burger-menu-button" aria-label="Открыть меню" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="burger-menu" id="burgerMenu">
+        <button class="burger-menu-close-button" aria-label="Закрыть меню">×</button>
+        <ul>
+            {% if all_categories %} {# all_categories передается из views.py в контексте #}
+                {% for category in all_categories %}
+                <li>
+                    <a href="{% url 'catalog:provider_list_page' category_slug=category.slug %}">
+                        {{ category.name }}
+                    </a>
+                </li>
+                {% endfor %}
+                <li><hr></li> {# Разделитель #}
+            {% endif %}
+            <li><a href="{% url 'catalog:category_list_page' %}" class="all-categories-link">Все услуги</a></li>
+            {# Добавь другие ссылки для бургер-меню, если нужно #}
+        </ul>
+    </nav>
+    <div class="overlay" id="overlay"></div> {# Для затемнения фона при открытом бургер-меню #}
+
+    <main class="main-content">
+        {% block content %}
+        <!-- Сюда будет вставляться содержимое дочерних шаблонов -->
+        {% endblock content %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© {% now "Y" %} Архыз Life. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Скрипт для Lightbox2 (без jQuery, если используешь современную версию) -->
+    <script src="{% static 'lightbox2/js/lightbox.min.js' %}"></script>
+
+    <!-- Твой основной JavaScript файл (для бургер-меню и других кастомных скриптов) -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+    {% block page_specific_js %}
+    <!-- Сюда можно вставлять JavaScript, специфичный для отдельных страниц -->
+    {% endblock page_specific_js %}
+</body>
+</html>

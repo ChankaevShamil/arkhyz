@@ -1,0 +1,39 @@
+{% extends "catalog/base.html" %}
+{% load static %}
+
+{% block title %}{{ current_category.name }} - Провайдеры - Архыз Life{% endblock %}
+
+{% block content %}
+<div class="container page-container">
+    <h1 class="page-title">{{ current_category.name }}</h1>
+    {# Можно добавить хлебные крошки или описание категории #}
+    {# {% if current_category.description %}<p>{{ current_category.description }}</p>{% endif %} #}
+
+    <div class="provider-list">
+        {% for provider in providers %}
+            <div class="provider-card">
+                <a href="{% url 'catalog:provider_detail_page' provider_slug=provider.slug %}" class="provider-card-link">
+                    <div class="provider-card-header">
+                        <h2 class="provider-card-name">{{ provider.name }}</h2>
+                        {% if provider.short_description %}
+                        <p class="provider-card-short-desc">{{ provider.short_description }}</p>
+                        {% endif %}
+                    </div>
+                    {% if provider.gallery_images.all %}
+                    <div class="provider-card-gallery">
+                        {% for p_image in provider.gallery_images.all|slice:":3" %} {# Показываем до 3х изображений #}
+                            <img src="{{ p_image.image.url }}" alt="Фото для {{ provider.name }}" class="provider-card-gallery-image">
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="provider-card-gallery-placeholder">Нет фото</div>
+                    {% endif %}
+                </a>
+            </div>
+        {% empty %}
+            <p>В категории "{{ current_category.name }}" пока нет предложений.</p>
+            <p><a href="{% url 'catalog:category_list_page' %}">Посмотреть другие категории</a></p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

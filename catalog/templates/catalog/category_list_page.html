@@ -1,0 +1,34 @@
+{% extends "catalog/base.html" %}
+{% load static %}
+
+{% block title %}Категории Услуг - Архыз Life{% endblock %}
+
+{% block content %}
+<div class="container page-container">
+    <h1 class="page-title">Все Услуги в Архызе</h1>
+    <div class="category-list">
+        {% for category in all_categories %} {# all_categories приходит из context view #}
+            <div class="category-card">
+                <a href="{% url 'catalog:provider_list_page' category_slug=category.slug %}" class="category-card-link">
+                    {% if category.image %}
+                    <div class="category-card-image-wrapper">
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-card-image">
+                    </div>
+                    {% else %}
+                    <div class="category-card-image-placeholder">Нет фото</div>
+                    {% endif %}
+                    <div class="category-card-content">
+                        {% if category.subtitle %}
+                        <p class="category-card-subtitle">{{ category.subtitle }}</p>
+                        {% endif %}
+                        <h2 class="category-card-title">{{ category.name }}</h2>
+                        <span class="category-card-action">Наши предложения</span>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p>Категорий услуг пока не добавлено.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

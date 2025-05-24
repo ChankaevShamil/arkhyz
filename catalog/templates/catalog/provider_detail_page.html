@@ -1,0 +1,73 @@
+{% extends "catalog/base.html" %}
+{% load static %}
+{% load catalog_extras %} {# Загружаем наш кастомный тег для форматирования телефона #}
+
+{% block title %}{{ provider.name }} - Детали услуги - Архыз Life{% endblock title %}
+
+{% block content %}
+<div class="container page-container provider-detail-view">
+    <div class="provider-detail-header">
+        {% if provider.profile_image %}
+            <img src="{{ provider.profile_image.url }}" alt="Фото профиля {{ provider.name }}" class="provider-profile-image">
+        {% else %}
+            <div class="provider-profile-image-placeholder">Нет фото</div>
+        {% endif %}
+        <div class="provider-info-main">
+            <h1>{{ provider.name }}</h1>
+            {% if provider.short_description %}
+                <p class="provider-short-intro">{{ provider.short_description }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if provider.full_description %}
+        <section class="provider-section provider-full-description-section">
+            <h2>Подробное описание</h2>
+            <div class="description-content">
+                {{ provider.full_description|linebreaksbr }}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if provider.gallery_images.all %}
+        <section class="provider-section provider-gallery-section">
+            <h2>Галерея</h2>
+            <div class="gallery-grid">
+                {% for p_image in provider.gallery_images.all %}
+                    <a href="{{ p_image.image.url }}"
+                       data-lightbox="provider-{{ provider.id }}-gallery"
+                       data-title="{{ provider.name }} - Фото {{ forloop.counter }}{% if p_image.alt_text %} - {{ p_image.alt_text }}{% endif %}">
+                        <img src="{{ p_image.image.url }}" alt="{% if p_image.alt_text %}{{ p_image.alt_text }}{% else %}Галерея {{ provider.name }} - фото {{ forloop.counter }}{% endif %}" class="gallery-thumbnail">
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="provider-section provider-contacts-section">
+        <h2>Контакты</h2>
+        <p class="contact-phone">
+            Телефон: <a href="tel:{{ provider.phone_number|filter_phone }}">{{ provider.phone_number }}</a>
+        </p>
+        {# Здесь можно добавить другие контакты, если они будут в модели #}
+    </section>
+
+    <div class="back-link-container">
+        {% if provider.categories.first %}
+        <a href="{% url 'catalog:provider_list_page' category_slug=provider.categories.first.slug %}" class="btn-back">Назад к списку в "{{ provider.categories.first.name }}"</a>
+        {% else %}
+        <a href="{% url 'catalog:category_list_page' %}" class="btn-back">Ко всем категориям</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block page_specific_js %}
+    {# Если нужны какие-то особые настройки для Lightbox на этой странице, их можно добавить сюда #}
+    {# Например, если бы ты хотел использовать JS API Lightbox для чего-то:
+    <script>
+        // lightbox.option({ ... }); // Это лучше делать глобально в script.js или base.html, если опции общие
+    </script>
+    #}
+{% endblock page_specific_js %}

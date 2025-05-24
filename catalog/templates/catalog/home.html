@@ -1,0 +1,21 @@
+{% extends "catalog/base.html" %}
+{% load static %}
+
+{% block title %}Архыз Life - Место, где рождаются легенды{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-background" style="background-image: url('{% static 'images/main_background_mountains.jpg' %}')">
+        {# Убедитесь, что изображение main_background_mountains.jpg есть в static/images/ #}
+    </div>
+    <div class="hero-content">
+        <h1>Место, где рождаются легенды</h1>
+    </div>
+</section>
+
+{# Здесь можно добавить какой-то еще контент, если нужно #}
+<section class="info-section">
+    <p>Добро пожаловать в Архыз! Найдите лучшие услуги для вашего отдыха.</p>
+    <a href="{% url 'catalog:category_list_page' %}" class="btn">Посмотреть все услуги</a>
+</section>
+{% endblock %}
